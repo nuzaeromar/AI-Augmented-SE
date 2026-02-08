@@ -12,24 +12,31 @@ def mul_consecutive_nums(nums):
 ## Refactored Code:
 
 ```python
-def multiply_consecutive_numbers(numbers):
-    """Return a list of products of each pair of consecutive numbers in the input list.
+def mul_consecutive_nums(nums):
+    """
+    Multiplies each pair of consecutive numbers in the input list.
 
     Args:
-        numbers: List of numbers to process.
+        nums (list[float]): A list of numbers (int or float).
 
     Returns:
-        List of products where each element is the product of two consecutive numbers
-        from the input list. The length of the result is len(numbers) - 1.
+        list[float]: A list where each element is the product of consecutive elements
+                    from the input list. The length of the result is len(nums) - 1.
+
+    Precision:
+        - For integer inputs, the result will be an integer.
+        - For floating-point inputs, the result will maintain the precision of Python floats.
+        - No rounding or truncation is applied.
     """
-    return [a * b for a, b in zip(numbers[:-1], numbers[1:])]
+    result = [b * a for a, b in zip(nums[:-1], nums[1:])]
+    return result
 ```
 
-- Renamed function and parameter to be more descriptive
-- Added docstring explaining purpose, arguments, and return value
-- Maintained exact same logic and behavior
-- Kept list comprehension for efficiency
-- Preserved original functionality as validated by tests
-- Improved readability through better naming
-- Maintained same input/output behavior
-- No changes to core algorithm or edge case handling
+- All function and variable names remain unchanged (`mul_consecutive_nums`, `nums`, `result`).
+- The logic and equation (`b * a`) are preserved exactly as in the original.
+- The implementation handles both integers and floats, maintaining precision as per Python's float behavior.
+- The input and output types are explicitly documented (list of numbers in, list of products out).
+- The function is placed in the `tasks/` directory (as required by the tests).
+- The zip operation with slicing (`nums[:-1]` and `nums[1:]`) ensures consecutive pairs are processed.
+- No additional dependencies or imports are needed.
+- The docstring clarifies the behavior, including precision requirements.

@@ -13,26 +13,29 @@ def remove_column(list1, n):
 ## Refactored Code:
 
 ```python
-def remove_column(matrix, column_index):
-    """Remove the specified column from each row in the matrix.
+def remove_column(list1, n):
+    """Remove the nth column from each row in the 2D list.
 
     Args:
-        matrix: A list of lists representing a matrix.
-        column_index: The index of the column to remove.
+        list1: A 2D list (list of lists) where each sublist represents a row.
+        n: The index of the column to remove (0-based).
 
     Returns:
-        The matrix with the specified column removed from each row.
+        The modified 2D list with the nth column removed from each row.
+
+    Note:
+        This function modifies the input list in-place and also returns it.
+        The function assumes all rows in the list have at least n+1 columns.
     """
-    return [row[:column_index] + row[column_index + 1:] for row in matrix]
+    for row in list1:
+        del row[n]
+    return list1
 ```
 
-- Preserved the exact behavior of removing a column from each row in the matrix
-- Improved readability with a descriptive function name and docstring
-- Used list comprehension for more concise and Pythonic implementation
-- Added parameter names that clearly indicate their purpose
-- Maintained the same return value structure
-- Kept the same input/output types (list of lists)
-- Ensured the function still works with the same edge cases (empty lists, single-element rows)
-- Improved maintainability by making the code more self-documenting
-- Reduced the number of lines while increasing clarity
-- Preserved the original functionality as validated by the tests
+- The function signature remains exactly the same: `def remove_column(list1, n):`
+- The logic is preserved: it removes the nth column from each row in the 2D list
+- The function still modifies the input list in-place and returns it
+- The variable names (`list1`, `n`) remain unchanged
+- The function handles all edge cases as in the original implementation
+- The mathematical operations (if any) are preserved (though none exist in this simple function)
+- The function maintains the same behavior as validated by the provided tests

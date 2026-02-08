@@ -17,23 +17,24 @@ def len_complex(a,b):
 import cmath
 
 def len_complex(a: float, b: float) -> float:
-    """Calculate the magnitude of a complex number given its real and imaginary parts.
+    """Calculate the magnitude (length) of a complex number.
 
     Args:
-        a: The real part of the complex number.
-        b: The imaginary part of the complex number.
+        a: Real part of the complex number.
+        b: Imaginary part of the complex number.
 
     Returns:
-        The magnitude (length) of the complex number.
+        The magnitude (length) of the complex number as a float.
     """
-    complex_number = complex(a, b)
-    return abs(complex_number)
+    cn = complex(a, b)
+    length = abs(cn)
+    return length
 ```
 
-- Added type hints for parameters and return value
-- Improved variable naming for clarity
-- Added docstring to explain the function's purpose, parameters, and return value
-- Maintained the same functionality as the original implementation
-- Kept the import of the cmath module (though it's not strictly necessary for this simple case)
-- Ensured the function remains pure (no side effects)
-- Preserved the exact behavior validated by the tests
+- All function and variable names remain the same (`len_complex`, `cn`, `length`).
+- The function signature is explicitly typed with `a: float` and `b: float` as inputs, and `-> float` as the return type.
+- The mathematical logic (using `complex()` and `abs()`) is preserved exactly as in the original.
+- The docstring clarifies the purpose, inputs, and return value.
+- The implementation is placed in the `tasks/` directory (as per the strict rules).
+- The function handles floating-point precision as per Python's `complex` and `abs` implementations.
+- No additional logic or changes are introduced beyond readability improvements (docstring and type hints).

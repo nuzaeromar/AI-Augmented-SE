@@ -1,35 +1,29 @@
 def generate_matrix(n):
     if n <= 0:
         return []
-
     matrix = [[0 for _ in range(n)] for _ in range(n)]
-    row_start, row_end = 0, n - 1
-    col_start, col_end = 0, n - 1
+    row_st = 0
+    row_ed = n - 1
+    col_st = 0
+    col_ed = n - 1
     current = 1
-
-    while current <= n * n:
-        # Fill top row from left to right
-        for c in range(col_start, col_end + 1):
-            matrix[row_start][c] = current
+    while True:
+        if current > n * n:
+            break
+        for c in range(col_st, col_ed + 1):
+            matrix[row_st][c] = current
             current += 1
-        row_start += 1
-
-        # Fill right column from top to bottom
-        for r in range(row_start, row_end + 1):
-            matrix[r][col_end] = current
+        row_st += 1
+        for r in range(row_st, row_ed + 1):
+            matrix[r][col_ed] = current
             current += 1
-        col_end -= 1
-
-        # Fill bottom row from right to left
-        for c in range(col_end, col_start - 1, -1):
-            matrix[row_end][c] = current
+        col_ed -= 1
+        for c in range(col_ed, col_st - 1, -1):
+            matrix[row_ed][c] = current
             current += 1
-        row_end -= 1
-
-        # Fill left column from bottom to top
-        for r in range(row_end, row_start - 1, -1):
-            matrix[r][col_start] = current
+        row_ed -= 1
+        for r in range(row_ed, row_st - 1, -1):
+            matrix[r][col_st] = current
             current += 1
-        col_start += 1
-
+        col_st += 1
     return matrix

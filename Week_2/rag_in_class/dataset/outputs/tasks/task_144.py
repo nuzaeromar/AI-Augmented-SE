@@ -1,21 +1,15 @@
-def sum_pairs(arr, n):
-    """Calculate the sum of pairs in the array with alternating signs.
-
-    For each element at index i (0-based), the contribution to the sum is:
-    - Positive if the index is even (0, 2, 4, ...)
-    - Negative if the index is odd (1, 3, 5, ...)
+def sum_Pairs(arr, n):
+    """
+    Calculate the sum of pairs in the array based on the given formula.
 
     Args:
-        arr: List of numbers
-        n: Number of elements to consider (from the end of the array)
+        arr (list): List of numerical values.
+        n (int): Length of the array.
 
     Returns:
-        The calculated sum
+        float: The computed sum based on the formula.
     """
-    total = 0
+    total = 0.0
     for i in range(n - 1, -1, -1):
-        if (n - 1 - i) % 2 == 0:
-            total += arr[i]
-        else:
-            total -= arr[i]
+        total += i * arr[i] - (n - 1 - i) * arr[i]
     return total

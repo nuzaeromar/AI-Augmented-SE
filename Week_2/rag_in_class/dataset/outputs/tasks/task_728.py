@@ -1,17 +1,12 @@
-def sum_lists(list1, list2):
-    """Return a new list where each element is the sum of corresponding elements from list1 and list2.
+def sum_list(lst1, lst2):
+    """Return a new list where each element is the sum of corresponding elements in lst1 and lst2.
 
     Args:
-        list1: First list of numbers
-        list2: Second list of numbers (must be same length as list1)
+        lst1: List of numbers (int or float)
+        lst2: List of numbers (int or float) with same length as lst1
 
     Returns:
-        List of summed elements
-
-    Raises:
-        ValueError: If lists are of different lengths
+        List of numbers where each element is lst1[i] + lst2[i]
+        Precision: Same as Python's built-in float addition (IEEE 754 double precision)
     """
-    if len(list1) != len(list2):
-        raise ValueError("Input lists must be of equal length")
-
-    return [a + b for a, b in zip(list1, list2)]
+    return [lst1[i] + lst2[i] for i in range(len(lst1))]

@@ -1,13 +1,15 @@
 import cmath
 
 def convert(numbers):
-    """Convert a number or sequence of numbers to polar coordinates.
+    """Convert a complex number to its polar form.
 
     Args:
-        numbers: A number or sequence of numbers to convert.
+        numbers: A complex number (as a complex type or a tuple/list of (real, imag)).
 
     Returns:
-        A tuple or sequence of tuples representing the polar coordinates
-        (magnitude, phase) of the input numbers.
+        A tuple (magnitude, phase) where:
+        - magnitude: The magnitude (r) of the complex number as a float.
+        - phase: The phase (theta) in radians as a float.
     """
-    return cmath.polar(numbers)
+    num = cmath.polar(numbers)
+    return num

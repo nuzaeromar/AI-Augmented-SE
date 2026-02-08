@@ -1,10 +1,13 @@
 def is_nonagonal(n):
-    """Calculate the nth nonagonal number.
+    """
+    Calculate the nth nonagonal number.
+
+    The nth nonagonal number is given by the formula: n * (7 * n - 5) / 2
 
     Args:
-        n: The position in the sequence of nonagonal numbers.
+        n (int): The position in the sequence of nonagonal numbers.
 
     Returns:
-        The nth nonagonal number.
+        int: The nth nonagonal number.
     """
     return int(n * (7 * n - 5) / 2)

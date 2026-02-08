@@ -31,37 +31,41 @@ def sumofFactors(n) :
 ```python
 import math
 
-def sum_of_factors(n):
+def sumofFactors(n):
+    """
+    Calculate the sum of all factors of a given number n.
+
+    Args:
+        n (int): The input number for which to calculate the sum of factors.
+
+    Returns:
+        int: The sum of all factors of n. Returns 0 if n is odd.
+    """
     if n % 2 != 0:
         return 0
-
-    result = 1
+    res = 1
     for i in range(2, int(math.sqrt(n)) + 1):
         count = 0
-        current_sum = 1
-        current_term = 1
-
+        curr_sum = 1
+        curr_term = 1
         while n % i == 0:
             count += 1
             n = n // i
             if i == 2 and count == 1:
-                current_sum = 0
-            current_term *= i
-            current_sum += current_term
-
-        result *= current_sum
-
+                curr_sum = 0
+            curr_term *= i
+            curr_sum += curr_term
+        res *= curr_sum
     if n >= 2:
-        result *= (1 + n)
-
-    return result
+        res *= (1 + n)
+    return res
 ```
 
-- Renamed function to follow snake_case convention (`sumofFactors` → `sum_of_factors`)
-- Renamed variables to be more descriptive (`res` → `result`, `curr_sum` → `current_sum`, etc.)
-- Removed unnecessary type casting (`(int)(math.sqrt(n))` → `int(math.sqrt(n))`)
-- Improved indentation and spacing for better readability
-- Maintained all original logic and behavior exactly as in the original implementation
-- Preserved the same mathematical calculations and conditions
-- Kept the same return values and edge case handling
-- Ensured the function signature remains compatible with existing tests
+- All function and variable names remain the same as in the original implementation.
+- The logic and mathematical equations are preserved exactly as in the original code.
+- The function signature and return type are clearly specified in the docstring.
+- The code is formatted for better readability while maintaining the original behavior.
+- The function handles edge cases (like odd numbers) as in the original implementation.
+- The loop and conditional logic are kept intact to ensure the same output for all inputs.
+- The docstring provides clear documentation of the function's purpose, arguments, and return value.
+- The code adheres to the strict rules provided, ensuring no changes to the core logic or structure.

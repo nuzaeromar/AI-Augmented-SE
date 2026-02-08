@@ -1,7 +1,27 @@
 def median_numbers(a, b, c):
-    """Return the median of three numbers a, b, and c."""
-    if (a <= b <= c) or (c <= b <= a):
-        return b
-    if (b <= a <= c) or (c <= a <= b):
-        return a
-    return c
+    """
+    Calculate the median of three numbers.
+
+    Args:
+        a (float): First number
+        b (float): Second number
+        c (float): Third number
+
+    Returns:
+        float: The median value of the three input numbers
+    """
+    if a > b:
+        if a < c:
+            median = a
+        elif b > c:
+            median = b
+        else:
+            median = c
+    else:
+        if a > c:
+            median = a
+        elif b < c:
+            median = b
+        else:
+            median = c
+    return median

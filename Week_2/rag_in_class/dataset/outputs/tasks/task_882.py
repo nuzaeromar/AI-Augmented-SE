@@ -1,11 +1,12 @@
-def parallelogram_perimeter(base, height):
-    """Calculate the perimeter of a parallelogram given its base and height.
+def parallelogram_perimeter(b, h):
+    """Calculate the perimeter of a parallelogram given base and height.
 
     Args:
-        base: Length of the base of the parallelogram.
-        height: Height of the parallelogram.
+        b (float): Length of the base of the parallelogram.
+        h (float): Height of the parallelogram.
 
     Returns:
-        The perimeter of the parallelogram.
+        float: Perimeter of the parallelogram calculated as 2 * (b * h).
     """
-    return 2 * (base + height)
+    perimeter = 2 * (b * h)
+    return perimeter

@@ -1,4 +1,4 @@
-.FF.FF.....FF..F..FFFF.F.F...F.FF..FF...                                 [100%]
+.F..F..............F.F..................                                 [100%]
 =================================== FAILURES ===================================
 ______________________________ test_mbpp_asserts _______________________________
 
@@ -8,14 +8,6 @@ E       assert 5 == 3
 E        +  where 5 = kth_element([3, 5, 7, 12, 19], 5, 2)
 
 tests/test_task_101.py:4: AssertionError
-________________________________ test_task_107 _________________________________
-
-    def test_task_107():
->       assert count_Hexadecimal(10,15) == 6
-               ^^^^^^^^^^^^^^^^^
-E       NameError: name 'count_Hexadecimal' is not defined
-
-tests/test_task_107.py:4: NameError
 ______________________________ test_mbpp_asserts _______________________________
 
     def test_mbpp_asserts():
@@ -24,46 +16,6 @@ E       assert 3.141592653589793 == 1.5707963267948966
 E        +  where 3.141592653589793 = angle_complex(0, 1j)
 
 tests/test_task_124.py:4: AssertionError
-________________________________ test_task_144 _________________________________
-
-    def test_task_144():
->       assert sum_Pairs([1,8,9,15,16],5) == 74
-               ^^^^^^^^^
-E       NameError: name 'sum_Pairs' is not defined
-
-tests/test_task_144.py:4: NameError
-______________________________ test_mbpp_asserts _______________________________
-
-    def test_mbpp_asserts():
->       assert find_Max_Len_Even("python language") == "language"
-               ^^^^^^^^^^^^^^^^^
-E       NameError: name 'find_Max_Len_Even' is not defined
-
-tests/test_task_315.py:4: NameError
-_________________________________ test_task_33 _________________________________
-
-    def test_task_33():
->       assert decimal_To_Binary(10) == 1010
-               ^^^^^^^^^^^^^^^^^
-E       NameError: name 'decimal_To_Binary' is not defined
-
-tests/test_task_33.py:4: NameError
-________________________________ test_task_392 _________________________________
-
-    def test_task_392():
->       assert get_max_sum(60) == 106
-E       assert 60 == 106
-E        +  where 60 = get_max_sum(60)
-
-tests/test_task_392.py:4: AssertionError
-________________________________ test_task_426 _________________________________
-
-    def test_task_426():
->       assert filter_oddnumbers([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])==[1,3,5,7,9]
-               ^^^^^^^^^^^^^^^^^
-E       NameError: name 'filter_oddnumbers' is not defined
-
-tests/test_task_426.py:4: NameError
 ______________________________ test_mbpp_asserts _______________________________
 
     def test_mbpp_asserts():
@@ -76,91 +28,13 @@ tests/test_task_431.py:5: AssertionError
 ______________________________ test_mbpp_asserts _______________________________
 
     def test_mbpp_asserts():
->       assert sumofFactors(18) == 26
-               ^^^^^^^^^^^^
-E       NameError: name 'sumofFactors' is not defined
-
-tests/test_task_453.py:4: NameError
-______________________________ test_mbpp_asserts _______________________________
-
-    def test_mbpp_asserts():
 >       assert upper_ctr('PYthon') == 1
-               ^^^^^^^^^
-E       NameError: name 'upper_ctr' is not defined
+E       AssertionError: assert 2 == 1
+E        +  where 2 = upper_ctr('PYthon')
 
-tests/test_task_461.py:4: NameError
-________________________________ test_task_489 _________________________________
-
-    def test_task_489():
->       assert frequency_Of_Largest(5,[1,2,3,4,4]) == 2
-               ^^^^^^^^^^^^^^^^^^^^
-E       NameError: name 'frequency_Of_Largest' is not defined
-
-tests/test_task_489.py:4: NameError
-______________________________ test_mbpp_asserts _______________________________
-
-    def test_mbpp_asserts():
->       assert parallelogram_area(10,20)==200
-               ^^^^^^^^^^^^^^^^^^
-E       NameError: name 'parallelogram_area' is not defined
-
-tests/test_task_52.py:4: NameError
-________________________________ test_task_681 _________________________________
-
-    def test_task_681():
->       assert smallest_Divisor(10) == 2
-               ^^^^^^^^^^^^^^^^
-E       NameError: name 'smallest_Divisor' is not defined
-
-tests/test_task_681.py:4: NameError
-________________________________ test_task_690 _________________________________
-
-    def test_task_690():
->       assert mul_consecutive_nums([1, 1, 3, 4, 4, 5, 6, 7])==[1, 3, 12, 16, 20, 30, 42]
-               ^^^^^^^^^^^^^^^^^^^^
-E       NameError: name 'mul_consecutive_nums' is not defined
-
-tests/test_task_690.py:4: NameError
-________________________________ test_task_728 _________________________________
-
-    def test_task_728():
->       assert sum_list([10,20,30],[15,25,35])==[25,45,65]
-               ^^^^^^^^
-E       NameError: name 'sum_list' is not defined
-
-tests/test_task_728.py:4: NameError
-______________________________ test_mbpp_asserts _______________________________
-
-    def test_mbpp_asserts():
->       assert sum_of_odd_Factors(30) == 24
-               ^^^^^^^^^^^^^^^^^^
-E       NameError: name 'sum_of_odd_Factors' is not defined
-
-tests/test_task_853.py:4: NameError
-______________________________ test_mbpp_asserts _______________________________
-
-    def test_mbpp_asserts():
->       assert parallelogram_perimeter(10,20)==400
-E       assert 60 == 400
-E        +  where 60 = parallelogram_perimeter(10, 20)
-
-tests/test_task_882.py:4: AssertionError
+tests/test_task_461.py:4: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_task_101.py::test_mbpp_asserts - assert 5 == 3
-FAILED tests/test_task_107.py::test_task_107 - NameError: name 'count_Hexadec...
 FAILED tests/test_task_124.py::test_mbpp_asserts - assert 3.141592653589793 =...
-FAILED tests/test_task_144.py::test_task_144 - NameError: name 'sum_Pairs' is...
-FAILED tests/test_task_315.py::test_mbpp_asserts - NameError: name 'find_Max_...
-FAILED tests/test_task_33.py::test_task_33 - NameError: name 'decimal_To_Bina...
-FAILED tests/test_task_392.py::test_task_392 - assert 60 == 106
-FAILED tests/test_task_426.py::test_task_426 - NameError: name 'filter_oddnum...
 FAILED tests/test_task_431.py::test_mbpp_asserts - assert False == None
-FAILED tests/test_task_453.py::test_mbpp_asserts - NameError: name 'sumofFact...
-FAILED tests/test_task_461.py::test_mbpp_asserts - NameError: name 'upper_ctr...
-FAILED tests/test_task_489.py::test_task_489 - NameError: name 'frequency_Of_...
-FAILED tests/test_task_52.py::test_mbpp_asserts - NameError: name 'parallelog...
-FAILED tests/test_task_681.py::test_task_681 - NameError: name 'smallest_Divi...
-FAILED tests/test_task_690.py::test_task_690 - NameError: name 'mul_consecuti...
-FAILED tests/test_task_728.py::test_task_728 - NameError: name 'sum_list' is ...
-FAILED tests/test_task_853.py::test_mbpp_asserts - NameError: name 'sum_of_od...
-FAILED tests/test_task_882.py::test_mbpp_asserts - assert 60 == 400
+FAILED tests/test_task_461.py::test_mbpp_asserts - AssertionError: assert 2 == 1

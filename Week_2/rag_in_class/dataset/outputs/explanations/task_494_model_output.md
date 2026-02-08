@@ -12,25 +12,23 @@ def binary_to_integer(test_tup):
 ## Refactored Code:
 
 ```python
-def binary_to_integer(binary_tuple):
-    """Convert a tuple of binary digits (0s and 1s) to a decimal integer string.
+def binary_to_integer(test_tup):
+    """Convert a tuple of binary digits to an integer.
 
     Args:
-        binary_tuple: A tuple containing binary digits (0 or 1).
+        test_tup: A tuple of integers representing binary digits (0 or 1).
 
     Returns:
-        A string representation of the decimal integer.
+        A string representation of the integer value of the binary tuple.
     """
-    binary_str = ''.join(str(bit) for bit in binary_tuple)
-    decimal_value = int(binary_str, 2)
-    return str(decimal_value)
+    binary_str = "".join(str(ele) for ele in test_tup)
+    integer_value = int(binary_str, 2)
+    return str(integer_value)
 ```
 
-- Renamed `test_tup` to `binary_tuple` for clarity
-- Split the one-liner into separate steps for better readability
-- Added docstring to explain function purpose, arguments, and return value
-- Maintained exact same behavior (converts binary tuple to decimal string)
-- Kept the same return type (string)
-- Preserved the original logic of joining and converting
-- Improved variable naming (`res` → `decimal_value`, `ele` → `bit`)
-- Maintained all existing functionality as validated by tests
+- The function `binary_to_integer` takes a tuple of binary digits (0 or 1) and converts it to an integer.
+- The binary digits are joined into a string and then converted to an integer using base 2.
+- The result is returned as a string to maintain consistency with the original implementation.
+- The logic, input, and output remain the same as the original code.
+- The function name, variable names, and return type are preserved.
+- The mathematical conversion from binary to integer is kept identical to the original.

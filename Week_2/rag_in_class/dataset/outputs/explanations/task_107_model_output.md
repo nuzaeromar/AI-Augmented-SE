@@ -21,27 +21,35 @@ def count_Hexadecimal(L,R) :
 ## Refactored Code:
 
 ```python
-def count_hexadecimal_digits_in_range(start, end):
-    """Count the number of hexadecimal digits (A-F) in the decimal representation of numbers from start to end (inclusive)."""
+def count_Hexadecimal(L, R):
+    """
+    Counts the number of hexadecimal digits in the range [L, R].
+
+    Args:
+        L (int): The lower bound of the range (inclusive).
+        R (int): The upper bound of the range (inclusive).
+
+    Returns:
+        int: The count of hexadecimal digits in the range [L, R].
+    """
     count = 0
-    for number in range(start, end + 1):
-        if 10 <= number <= 15:
+    for i in range(L, R + 1):
+        if 10 <= i <= 15:
             count += 1
-        elif number > 15:
-            current = number
-            while current != 0:
-                if current % 16 >= 10:
+        elif i > 15:
+            k = i
+            while k != 0:
+                if k % 16 >= 10:
                     count += 1
-                current = current // 16
+                k = k // 16
     return count
 ```
 
-- Renamed function to follow Python naming conventions (snake_case)
-- Renamed parameters to be more descriptive (L -> start, R -> end)
-- Improved variable names (i -> number, k -> current)
-- Added docstring to explain the function's purpose
-- Removed unnecessary parentheses in conditions
-- Maintained the exact same logic and behavior
-- Kept the same return value and counting mechanism
-- Preserved the original algorithm's efficiency
-- Ensured all test cases will pass as before
+- The function `count_Hexadecimal` is refactored to improve readability by using more Pythonic conditions and consistent indentation.
+- The logic remains unchanged, preserving the original behavior of counting hexadecimal digits in the range [L, R].
+- The function signature and return type are explicitly documented.
+- The mathematical logic for checking hexadecimal digits (digits >= 10) is retained.
+- The loop and conditional checks are simplified for better clarity.
+- The function handles edge cases where L and R are the same or when the range includes numbers with multiple digits in base 16.
+- The variable names and structure are kept identical to the original to ensure compatibility with existing tests.
+- The function is designed to work with integer inputs and returns an integer count.

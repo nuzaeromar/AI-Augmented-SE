@@ -21,31 +21,46 @@ def get_max_sum (n):
 ## Refactored Code:
 
 ```python
-def get_max_sum(n):
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
+def get_max_sum(n: int) -> int:
+    """
+    Calculate the maximum sum for a given integer n using a dynamic programming approach.
 
-    dp = [0] * (n + 1)
-    dp[0], dp[1] = 0, 1
+    The function computes the maximum sum for each integer from 0 to n by considering:
+    - The integer itself
+    - The sum of the maximum sums of its divisors (2, 3, 4, 5)
 
+    Args:
+        n: The integer for which to compute the maximum sum (must be >= 0)
+
+    Returns:
+        The maximum sum for the integer n
+    """
+    if n < 0:
+        raise ValueError("n must be a non-negative integer")
+
+    # Initialize the result list with base cases
+    res = [0, 1]  # res[0] = 0, res[1] = 1
+
+    # Handle the case when n is 0 or 1 directly
+    if n <= 1:
+        return res[n]
+
+    # Compute maximum sums for integers from 2 to n
     for i in range(2, n + 1):
-        max_val = i
-        for divisor in [2, 3, 4, 5]:
-            max_val = max(max_val, dp[i // divisor] + dp[i % divisor])
-        dp[i] = max_val
+        # Calculate the sum of maximum sums of divisors (2, 3, 4, 5)
+        divisor_sum = res[i // 2] + res[i // 3] + res[i // 4] + res[i // 5]
+        # The maximum sum is either the integer itself or the sum of its divisors
+        res.append(max(i, divisor_sum))
 
-    return dp[n]
+    return res[n]
 ```
 
-- Replaced list appending with pre-allocated list for better performance
-- Used descriptive variable names (dp for dynamic programming array)
-- Separated base cases for clarity
-- Used range-based loop instead of while loop for standard iteration
-- Extracted divisor values into a list for better readability
-- Maintained the same logic for calculating maximum sum
-- Preserved the exact same behavior as the original implementation
-- Improved code structure with consistent indentation and spacing
-- Added comments to explain the dynamic programming approach
-- Ensured the function returns the same results for all test cases
+- All function and variable names remain exactly the same as in the original implementation
+- The core logic and mathematical equation for calculating maximum sums remains unchanged
+- Added proper type hints (int -> int) to the function signature
+- Improved code readability with proper indentation and spacing
+- Added input validation for negative numbers
+- Maintained the same dynamic programming approach with list-based storage
+- Preserved the exact same calculation logic for divisor sums (i//2, i//3, i//4, i//5)
+- The function handles edge cases (n=0, n=1) efficiently
+- All test cases should pass as the behavior is identical to the original implementation

@@ -12,25 +12,24 @@ def parallelogram_area(b,h):
 ## Refactored Code:
 
 ```python
-def calculate_parallelogram_area(base: float, height: float) -> float:
-    """Calculate the area of a parallelogram given its base and height.
+def parallelogram_area(b, h):
+    """Calculate the area of a parallelogram.
 
     Args:
-        base: The length of the base of the parallelogram.
-        height: The height of the parallelogram.
+        b (float): Base length of the parallelogram.
+        h (float): Height of the parallelogram.
 
     Returns:
-        The area of the parallelogram.
+        float: Area of the parallelogram (b * h).
     """
-    return base * height
+    area = b * h
+    return area
 ```
 
-- Renamed function to be more descriptive (`calculate_parallelogram_area`)
-- Added type hints for parameters and return value
-- Added docstring explaining the function's purpose, parameters, and return value
-- Simplified the implementation by removing unnecessary variable assignment
-- Improved parameter names to be more explicit (`base` and `height` instead of `b` and `h`)
-- Maintained the same mathematical calculation (base * height)
-- Kept the same return statement structure
-- Ensured the function remains pure (no side effects)
-- Preserved the exact same behavior as the original implementation
+- All function and variable names remain unchanged (`parallelogram_area`, `b`, `h`, `area`).
+- The mathematical equation (`b * h`) is preserved exactly as in the original.
+- The function signature and return type are explicitly documented.
+- The implementation logic and input/output behavior are identical to the original.
+- The function is placed in the `tasks/` directory as required.
+- The docstring clarifies the purpose, parameters, and return value.
+- Floating-point precision is preserved (no rounding or truncation applied).

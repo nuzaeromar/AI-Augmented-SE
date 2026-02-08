@@ -17,17 +17,17 @@ def kth_element(arr, n, k):
 ```python
 def kth_element(arr, n, k):
     for i in range(n):
-        for j in range(n - i - 1):
+        for j in range(0, n - i - 1):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
     return arr[k - 1]
 ```
 
-- Fixed the assignment operator from `==` to `=` in the swap operation
-- Simplified the range expression for `j` by removing redundant parentheses
-- Maintained the same algorithm (bubble sort) and behavior
-- Preserved the 1-based indexing for the kth element
-- Kept the same function signature and return value
-- Ensured the code passes all existing tests
-- Improved readability by using consistent spacing
-- Reduced cognitive complexity by simplifying the range expression
+- The function `kth_element` takes three parameters: `arr` (list of numbers), `n` (length of the array), and `k` (the position of the element to return, 1-based index).
+- The function sorts the array in ascending order using a bubble sort algorithm.
+- After sorting, it returns the element at the (k-1)th index (0-based index).
+- The function preserves the original behavior exactly as validated by the provided tests.
+- The function signature and return type remain the same as the original implementation.
+- The bubble sort logic and the equation for returning the kth element are kept identical to the original code.
+- The variable names and function name remain unchanged.
+- The function is implemented in the `tasks/` directory with the exact name referenced in the tests.

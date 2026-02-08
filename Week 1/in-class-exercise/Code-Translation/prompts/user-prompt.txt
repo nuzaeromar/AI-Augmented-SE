@@ -1,7 +1,64 @@
+<<<<<<< Updated upstream
+=======
+Translate the following C++ source into Python so that it matches the expected Python unit-test interface.
+
+CRITICAL REQUIREMENTS (must follow exactly):
+
+GENERAL RULES
+- Preserve behavior, but prioritize Python unit-test compatibility if C++ idioms conflict.
+- Do NOT introduce additional required parameters unless explicitly stated below.
+- Use True/False booleans (never "true"/"false").
+- Use None for invalid or missing results (not "" or '\0').
+- Output ONLY valid Python code. No explanations.
+
+DICTIONARY HANDLING
+- All map-like inputs in Python are dicts.
+- When iterating key/value pairs, ALWAYS use dict.items().
+- NEVER write: for k, v in dict
+- ALWAYS write: for k, v in dict.items()
+
+ATTRIBUTE & DATA SHAPE HANDLING
+- Accept both dict-style inputs and object-style inputs when applicable.
+- Expose attributes (or @property) when tests access fields directly.
+- Dict structures must match expected nested dicts (never tuples).
+
+JSONProcessor-SPECIFIC RULE
+- The method JSONProcessor.read_json MUST include a positional argument named `output`.
+- The `output` argument MUST be OPTIONAL with a default value of None.
+- The method MUST work correctly when called as:
+    read_json(path)
+  and also when called as:
+    read_json(path, output)
+- If `output` is provided, populate it appropriately.
+- If `output` is None, return the parsed result instead.
+
+StockPortfolioTracker-SPECIFIC RULE
+- The attribute `portfolio` MUST be writable via direct assignment:
+    tracker.portfolio = [...]
+- Therefore, do NOT implement `portfolio` as a read-only @property.
+- If you use @property for `portfolio`, you MUST also implement a setter:
+    @portfolio.setter
+    def portfolio(self, value): ...
+- `portfolio` should store a Python list of holdings; each holding may be represented as dicts
+  with keys: "name", "price", "quantity" (because unit tests assign dicts directly).
+
+VendingMachine-SPECIFIC RULES
+- The attribute `inventory` MUST be a public, readable data attribute (a Python dict), NOT a method.
+  - Tests will access it as: vendingMachine.inventory
+  - Therefore: do NOT implement inventory() as a function.
+  - If you use @property for inventory, it MUST return the underlying dict AND must not appear as a bound method.
+  - inventory MUST be writable and reflect updates after add_item / purchase_item / restock_item.
+  - inventory MUST have the nested-dict shape: {{"Coke": {{"price": 1.25, "quantity": 20}}}}
+  - The attribute `balance` MUST be a public numeric attribute (float) accessible as vendingMachine.balance, and it must update when insert_coin is called.
+
+>>>>>>> Stashed changes
 File: {filename}
 
 C++ code:
 {code}
+<<<<<<< Updated upstream
 
 Output ONLY the Python code. No markdown, no explanations.
 
+=======
+>>>>>>> Stashed changes

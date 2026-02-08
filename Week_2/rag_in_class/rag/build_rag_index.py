@@ -49,6 +49,8 @@ def load_docs(paths: Paths) -> List[Document]:
     if paths.error_logs_dir.exists():
         for p in sorted(paths.error_logs_dir.glob("*.txt")):
             docs.append(Document(page_content=read_text(p), metadata={"source": str(p), "type": "error_log"}))
+        for p in sorted(paths.error_logs_dir.glob("*.md")):
+            docs.append(Document(page_content=read_text(p), metadata={"source": str(p), "type": "error_log"}))
 
     if paths.tests_dir.exists():
         for p in sorted(paths.tests_dir.glob("test_task_*.py")):
@@ -62,7 +64,7 @@ def main() -> None:
     paths = Paths(
         dataset_root=dataset_root,
         refactored_tasks_dir=dataset_root / "outputs" / "tasks",
-        error_logs_dir=dataset_root / "outputs" / "error_logs",
+        error_logs_dir=dataset_root / "outputs" / "explanations",
         tests_dir=dataset_root / "input" / "tests",
         index_dir=dataset_root / "outputs" / "rag_faiss_index",
     )

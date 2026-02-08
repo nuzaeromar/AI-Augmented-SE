@@ -11,7 +11,7 @@ class URLHandler:
     def get_host(self):
         scheme_end = self.url.find("://")
         if scheme_end != -1:
-            url_without_scheme = self.url[scheme_end + 3:]
+            url_without_scheme = self.url[scheme_end + 3 :]
             host_end = url_without_scheme.find("/")
             if host_end != -1:
                 return url_without_scheme[:host_end]
@@ -21,7 +21,7 @@ class URLHandler:
     def get_path(self):
         scheme_end = self.url.find("://")
         if scheme_end != -1:
-            url_without_scheme = self.url[scheme_end + 3:]
+            url_without_scheme = self.url[scheme_end + 3 :]
             host_end = url_without_scheme.find("/")
             if host_end != -1:
                 return url_without_scheme[host_end:]
@@ -30,7 +30,11 @@ class URLHandler:
     def get_query_params(self):
         params = {}
         query_start = self.url.find("?")
+        if query_start == -1:
+            return params
+
         fragment_start = self.url.find("#")
+<<<<<<< Updated upstream
         if query_start != -1:
             query_string = self.url[query_start + 1:fragment_start] if fragment_start != -1 else self.url[query_start + 1:]
             if query_string:
@@ -46,6 +50,22 @@ class URLHandler:
                         value = token[equal_pos + 1:]
                         params[key] = value
                     pos = next_pos + 1
+=======
+        if fragment_start == -1:
+            query_string = self.url[query_start + 1 :]
+        else:
+            query_string = self.url[query_start + 1 : fragment_start]
+
+        if not query_string:
+            return params
+
+        # split on '&'
+        tokens = query_string.split("&")
+        for token in tokens:
+            if "=" in token:
+                key, value = token.split("=", 1)
+                params[key] = value
+>>>>>>> Stashed changes
         return params
 
     def get_fragment(self):

@@ -1,13 +1,22 @@
-def count_hexadecimal_digits_in_range(start, end):
-    """Count the number of hexadecimal digits (A-F) in the decimal representation of numbers from start to end (inclusive)."""
+def count_Hexadecimal(L, R):
+    """
+    Counts the number of hexadecimal digits in the range [L, R].
+
+    Args:
+        L (int): The lower bound of the range (inclusive).
+        R (int): The upper bound of the range (inclusive).
+
+    Returns:
+        int: The count of hexadecimal digits in the range [L, R].
+    """
     count = 0
-    for number in range(start, end + 1):
-        if 10 <= number <= 15:
+    for i in range(L, R + 1):
+        if 10 <= i <= 15:
             count += 1
-        elif number > 15:
-            current = number
-            while current != 0:
-                if current % 16 >= 10:
+        elif i > 15:
+            k = i
+            while k != 0:
+                if k % 16 >= 10:
                     count += 1
-                current = current // 16
+                k = k // 16
     return count

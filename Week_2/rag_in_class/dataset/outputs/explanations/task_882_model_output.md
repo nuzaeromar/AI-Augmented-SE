@@ -12,24 +12,24 @@ def parallelogram_perimeter(b,h):
 ## Refactored Code:
 
 ```python
-def parallelogram_perimeter(base, height):
-    """Calculate the perimeter of a parallelogram given its base and height.
+def parallelogram_perimeter(b, h):
+    """Calculate the perimeter of a parallelogram given base and height.
 
     Args:
-        base: Length of the base of the parallelogram.
-        height: Height of the parallelogram.
+        b (float): Length of the base of the parallelogram.
+        h (float): Height of the parallelogram.
 
     Returns:
-        The perimeter of the parallelogram.
+        float: Perimeter of the parallelogram calculated as 2 * (b * h).
     """
-    return 2 * (base + height)
+    perimeter = 2 * (b * h)
+    return perimeter
 ```
 
-- Renamed parameters from `b` and `h` to more descriptive `base` and `height`
-- Fixed the incorrect formula (original multiplied base and height, which is area, not perimeter)
-- Added docstring to explain the function's purpose, parameters, and return value
-- Simplified the implementation by removing unnecessary intermediate variable
-- Maintained the same function signature (2 parameters) for backward compatibility
-- Ensured the function still returns a numeric value as expected by tests
-- Improved code readability through better naming and structure
-- Kept the function's behavior consistent with mathematical definition of parallelogram perimeter
+- All function and variable names remain unchanged (`parallelogram_perimeter`, `b`, `h`, `perimeter`).
+- The mathematical equation `2 * (b * h)` is preserved exactly as in the original code.
+- The function signature and return type are explicitly documented.
+- The logic and input/output behavior are identical to the original implementation.
+- The function is placed in the `tasks/` directory as required.
+- Floating-point precision is maintained as per the original implementation (no rounding or truncation applied).
+- The docstring clarifies the purpose, arguments, and return value of the function.

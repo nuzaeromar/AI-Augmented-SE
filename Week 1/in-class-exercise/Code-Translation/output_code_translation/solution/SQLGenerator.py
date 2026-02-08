@@ -2,20 +2,30 @@ class SQLGenerator:
     def __init__(self, table_name):
         self.table_name = table_name
 
+<<<<<<< Updated upstream
     def select(self, fields=None, condition=""):
+=======
+    def select(self, fields=None, condition: str = "") -> str:
+>>>>>>> Stashed changes
         if fields is None:
             fields = []
         fields_str = "*"
         if fields:
             fields_str = fields[0]
+<<<<<<< Updated upstream
             for i in range(1, len(fields)):
                 fields_str += ", " + fields[i]
 
+=======
+            for field in fields[1:]:
+                fields_str += ", " + field
+>>>>>>> Stashed changes
         sql = f"SELECT {fields_str} FROM {self.table_name}"
         if condition:
             sql += f" WHERE {condition}"
         return sql + ";"
 
+<<<<<<< Updated upstream
     def insert(self, data):
         fields_stream = []
         values_stream = []
@@ -40,6 +50,25 @@ class SQLGenerator:
 
         set_clause_str = "".join(set_clause_stream)
         sql = f"UPDATE {self.table_name} SET {set_clause_str}"
+=======
+    def insert(self, data: dict) -> str:
+        fields_parts = []
+        values_parts = []
+        for key, value in data.items():
+            fields_parts.append(key)
+            values_parts.append(f"'{value}'")
+        fields_str = ", ".join(fields_parts)
+        values_str = ", ".join(values_parts)
+        sql = f"INSERT INTO {self.table_name} ({fields_str}) VALUES ({values_str})"
+        return sql + ";"
+
+    def update(self, data: dict, condition: str) -> str:
+        set_parts = []
+        for key, value in data.items():
+            set_parts.append(f"{key} = '{value}'")
+        set_clause = ", ".join(set_parts)
+        sql = f"UPDATE {self.table_name} SET {set_clause}"
+>>>>>>> Stashed changes
         if condition:
             sql += f" WHERE {condition}"
         return sql + ";"

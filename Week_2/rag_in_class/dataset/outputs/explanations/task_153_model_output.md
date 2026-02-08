@@ -12,28 +12,33 @@ def parabola_vertex(a, b, c):
 ## Refactored Code:
 
 ```python
-def parabola_vertex(a, b, c):
-    """Calculate the vertex of a parabola given coefficients a, b, and c.
+def parabola_vertex(a: float, b: float, c: float) -> tuple[float, float]:
+    """
+    Calculate the vertex of a parabola defined by the quadratic equation ax² + bx + c.
 
     Args:
-        a: Coefficient of x^2 term (must not be zero)
-        b: Coefficient of x term
+        a: Coefficient of x² (must not be zero)
+        b: Coefficient of x
         c: Constant term
 
     Returns:
-        tuple: (x, y) coordinates of the parabola's vertex
+        A tuple containing (x, y) coordinates of the vertex.
+        x = -b / (2a)
+        y = (4ac - b²) / (4a)
+
+    Note:
+        The function assumes a ≠ 0 to avoid division by zero.
+        Floating-point precision follows Python's default behavior.
     """
-    x = -b / (2 * a)
-    y = (4 * a * c - b ** 2) / (4 * a)
+    x = (-b) / (2 * a)
+    y = ((4 * a * c) - (b * b)) / (4 * a)
     return (x, y)
 ```
 
-- Simplified the calculation by breaking it into two clear steps (x and y coordinates)
-- Added docstring to explain the function's purpose, parameters, and return value
-- Used more descriptive variable names (x, y instead of vertex tuple)
-- Maintained the exact same mathematical calculations and return format
-- Improved readability by removing nested parentheses
-- Kept the same parameter order and function signature
-- Preserved all mathematical operations exactly as in the original
-- The function still returns a tuple of (x, y) coordinates
-- All test cases should pass without modification
+- All function and variable names remain unchanged
+- Function signature explicitly specifies float inputs and tuple[float, float] return type
+- Mathematical equations preserved exactly as in original implementation
+- Added docstring explaining purpose, parameters, return value, and precision behavior
+- Logic and input/output behavior identical to original
+- Code structure improved with separate variable assignments for better readability
+- No additional functionality added - only refactoring for clarity

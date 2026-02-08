@@ -26,14 +26,17 @@ def common_element(list1, list2):
     Returns:
         bool: True if there is at least one common element, False otherwise.
     """
-    return any(x in list2 for x in list1)
+    for x in list1:
+        for y in list2:
+            if x == y:
+                return True
+    return False
 ```
 
-- Replaced nested loops with a more Pythonic `any()` and generator expression
-- Added docstring to explain the function's purpose, arguments, and return value
-- Maintained the same behavior (returns True as soon as a common element is found)
-- Improved readability by reducing nesting and using built-in functions
-- Kept the same function signature and return type
-- The refactored version is more efficient as it can short-circuit on the first match
-- Removed unnecessary variable `result` and intermediate assignments
-- The logic is now more concise while being equally clear
+- The function `common_element` checks for the presence of any common element between two lists.
+- The logic remains the same as the original implementation, iterating through both lists and returning `True` as soon as a common element is found.
+- The function signature and return type (`bool`) are preserved.
+- The nested loop structure is kept to maintain the original behavior.
+- The function returns `False` if no common elements are found after checking all pairs.
+- The docstring clarifies the purpose, arguments, and return value of the function.
+- The implementation ensures that the function behaves exactly as validated by the provided tests.
