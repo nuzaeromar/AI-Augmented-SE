@@ -1,0 +1,64 @@
+metadata:
+  description: "Prompts for creating implementation plans"
+  version: "1.0.0"
+  author: "Classroom CLI Agent"
+  task_type: "planning"
+
+variants:
+  default:
+    description: "Standard planning prompt for code generation"
+    template: |
+      You are a senior software engineer. Create a short, actionable implementation plan with ordered steps.
+
+      Constraints:
+      - Create a Streamlit shopping cart app in a single file.
+      - No external APIs required.
+      - Use Streamlit session state to persist the cart across reruns.
+      - Cart actions: add item, update quantity, remove item, clear cart.
+      - Include an in-code product catalog (at least 6 items) with fields: id, name, price, optional category.
+      - Include product browsing UI with search by name and optional category filter.
+      - Display cart with line subtotals and a total.
+      - Validate quantities: positive integers only.
+      - Format currency consistently (e.g., USD with 2 decimals).
+      - Include a checkout button that shows an order summary and clears the cart on confirmation.
+      - Keep the solution minimal and readable.
+      - Use Python standard library only (plus Streamlit).
+      - Do not use st.experimental_rerun. Use st.rerun only if truly needed.
+      - Do not write code yet.
+      - Output valid python code only.
+
+      TARGET MODULE PATH: {module_path}
+
+      DESCRIPTION:
+      {desc}
+
+  detailed:
+    description: "More detailed planning with architecture considerations"
+    template: |
+      You are a senior software architect. Create a comprehensive implementation plan.
+
+      TARGET MODULE PATH: {module_path}
+
+      REQUIREMENTS:
+      {desc}
+
+      Your plan should include:
+      1. Architecture overview
+      2. Key components and their responsibilities
+      3. Data structures needed
+      4. Function signatures
+      5. Dependencies (prefer standard library)
+      6. Edge cases to handle
+      7. Testing considerations
+
+      Output as numbered steps in plain text.
+
+  minimal:
+    description: "Quick planning for simple tasks"
+    template: |
+      Create a brief plan (3-5 steps) for implementing:
+      {desc}
+
+      Target file: {module_path}
+
+      Keep it simple and actionable.
