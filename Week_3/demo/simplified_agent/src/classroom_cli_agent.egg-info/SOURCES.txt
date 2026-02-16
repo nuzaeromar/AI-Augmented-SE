@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/classroom_cli_agent/__init__.py
+src/classroom_cli_agent/agent.py
+src/classroom_cli_agent/cli.py
+src/classroom_cli_agent/llm.py
+src/classroom_cli_agent/prompts.py
+src/classroom_cli_agent/tools.py
+src/classroom_cli_agent/types.py
+src/classroom_cli_agent/utils.py
+src/classroom_cli_agent.egg-info/PKG-INFO
+src/classroom_cli_agent.egg-info/SOURCES.txt
+src/classroom_cli_agent.egg-info/dependency_links.txt
+src/classroom_cli_agent.egg-info/entry_points.txt
+src/classroom_cli_agent.egg-info/requires.txt
+src/classroom_cli_agent.egg-info/top_level.txt
