@@ -1,0 +1,20 @@
+__pycache__/
+.py[co]
+.pytest_cache/
+.streamlit/
+.venv/
+=== SELF-REVIEW ===
+missing_files: []
+unresolved_imports: []
+constraints_respected:
+  - "multi-file scaffold"
+  - "no extra files"
+  - "offline tests"
+likely_edge_cases:
+  - Empty cart checkout attempt
+  - Duplicate product addition to cart
+  - Session state persistence across page refreshes
+next_improvements:
+  - Add product quantity selection
+  - Implement persistent cart storage
+  - Add user authentication
