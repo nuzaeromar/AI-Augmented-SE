@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Agent</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg:        #0a0c10;
+    --surface:   #111318;
+    --surface2:  #1a1d24;
+    --border:    #21262d;
+    --text:      #e6edf3;
+    --muted:     #7d8590;
+    --blue:      #58a6ff;
+    --purple:    #bc8cff;
+    --green:     #3fb950;
+    --yellow:    #e3b341;
+    --red:       #f85149;
+    --orange:    #d18616;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ── Layout ── */
+  .app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--blue);
+    letter-spacing: -0.5px;
+  }
+  .logo-sub {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .nav { padding: 12px 0; flex: 1; }
+  .nav-section {
+    padding: 8px 20px 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    font-size: 12px;
+  }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active {
+    color: var(--blue);
+    border-left-color: var(--blue);
+    background: rgba(88, 166, 255, 0.06);
+  }
+  .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+
+  .status-bar {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .status-label { color: var(--muted); }
+  .badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .badge-green  { background: rgba(63,185,80,0.15);  color: var(--green); }
+  .badge-red    { background: rgba(248,81,73,0.15);  color: var(--red); }
+  .badge-yellow { background: rgba(227,179,65,0.15); color: var(--yellow); }
+  .badge-blue   { background: rgba(88,166,255,0.15); color: var(--blue); }
+  .badge-muted  { background: var(--surface2); color: var(--muted); }
+
+  /* ── Main ── */
+  .main { display: flex; flex-direction: column; min-height: 100vh; }
+
+  .topbar {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .topbar-actions { display: flex; gap: 8px; }
+
+  .content { padding: 28px; flex: 1; max-width: 1100px; }
+
+  /* ── Pages ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) { .card-grid { grid-template-columns: 1fr; } }
+
+  /* ── Forms ── */
+  .form-group { margin-bottom: 14px; }
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  input, textarea, select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--blue); }
+  textarea { resize: vertical; min-height: 72px; }
+  select option { background: var(--surface2); }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-primary { background: var(--blue); color: #000; border-color: var(--blue); font-weight: 700; }
+  .btn-primary:hover { background: #79baff; color: #000; border-color: #79baff; }
+  .btn-success { background: var(--green); color: #000; border-color: var(--green); font-weight: 700; }
+  .btn-success:hover { background: #56d364; }
+  .btn-danger  { background: var(--red); color: #fff; border-color: var(--red); font-weight: 700; }
+  .btn-danger:hover  { background: #ff6b63; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* ── Pipeline log ── */
+  .pipeline-log {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 11px;
+    height: 260px;
+    overflow-y: auto;
+    margin-top: 16px;
+  }
+  .log-entry { display: flex; gap: 10px; margin-bottom: 4px; line-height: 1.5; }
+  .log-agent {
+    font-weight: 700;
+    padding: 0 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    align-self: flex-start;
+    margin-top: 1px;
+  }
+  .log-agent-Reviewer    { background: rgba(88,166,255,0.15);  color: #58a6ff; }
+  .log-agent-Planner     { background: rgba(188,140,255,0.15); color: #bc8cff; }
+  .log-agent-Writer      { background: rgba(63,185,80,0.15);   color: #3fb950; }
+  .log-agent-Gatekeeper  { background: rgba(227,179,65,0.15);  color: #e3b341; }
+  .log-agent-Orchestrator{ background: rgba(125,133,144,0.15); color: #7d8590; }
+  .log-agent-heartbeat   { display: none; }
+  .log-tool { color: var(--muted); font-style: italic; }
+  .log-msg  { color: var(--text); }
+
+  /* ── Agent pipeline viz ── */
+  .pipeline-viz {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+  .agent-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 90px;
+  }
+  .agent-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.3s;
+    background: var(--surface2);
+  }
+  .agent-dot.active {
+    border-color: var(--blue);
+    background: rgba(88,166,255,0.1);
+    box-shadow: 0 0 12px rgba(88,166,255,0.4);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .agent-dot.done { border-color: var(--green); background: rgba(63,185,80,0.1); }
+  .agent-dot.fail { border-color: var(--red);   background: rgba(248,81,73,0.1); }
+  .agent-label { font-size: 10px; color: var(--muted); text-align: center; }
+  .agent-connector {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    min-width: 20px;
+    margin-bottom: 22px;
+  }
+  .agent-connector.active { background: var(--blue); }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(88,166,255,0.3); }
+    50%       { box-shadow: 0 0 20px rgba(88,166,255,0.7); }
+  }
+
+  /* ── Result panels ── */
+  .result-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+  .result-section { margin-bottom: 14px; }
+  .result-section:last-child { margin-bottom: 0; }
+  .result-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .result-value { color: var(--text); }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .tag {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .checklist { list-style: none; }
+  .checklist li { display: flex; gap: 8px; margin-bottom: 4px; }
+  .checklist li::before { content: "☐"; color: var(--blue); }
+  .evidence-list { list-style: none; }
+  .evidence-list li { display: flex; gap: 8px; margin-bottom: 4px; }
+  .evidence-list li::before { content: "·"; color: var(--muted); }
+
+  /* ── Verdict ── */
+  .verdict-pass {
+    background: rgba(63,185,80,0.1);
+    border: 1px solid rgba(63,185,80,0.3);
+    color: var(--green);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .verdict-fail {
+    background: rgba(248,81,73,0.1);
+    border: 1px solid rgba(248,81,73,0.3);
+    color: var(--red);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .issue-list { list-style: none; margin-top: 8px; }
+  .issue-list li { display: flex; gap: 8px; margin-bottom: 4px; color: var(--red); }
+  .issue-list li::before { content: "✗"; }
+  .suggest-list { list-style: none; margin-top: 8px; }
+  .suggest-list li { display: flex; gap: 8px; margin-bottom: 4px; color: var(--yellow); }
+  .suggest-list li::before { content: "→"; }
+
+  /* ── Risk badges ── */
+  .risk-low    { color: var(--green);  }
+  .risk-medium { color: var(--yellow); }
+  .risk-high   { color: var(--red);    }
+
+  /* ── Approval section ── */
+  .approval-box {
+    background: rgba(88,166,255,0.05);
+    border: 1px solid rgba(88,166,255,0.2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .approval-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .approval-sub { color: var(--muted); font-size: 11px; margin-bottom: 16px; }
+
+  /* ── Empty state ── */
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab {
+    padding: 10px 16px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 12px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── Loading spinner ── */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-title">🤖 GitHub Agent</div>
+      <div class="logo-sub">Multi-Agent · Local LLM</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">Tasks</div>
+      <div class="nav-item active" data-page="review" onclick="showPage('review')">
+        <span class="nav-icon">🔍</span> Review Changes
+      </div>
+      <div class="nav-item" data-page="draft" onclick="showPage('draft')">
+        <span class="nav-icon">✏️</span> Draft Issue / PR
+      </div>
+      <div class="nav-item" data-page="improve" onclick="showPage('improve')">
+        <span class="nav-icon">⚡</span> Improve Existing
+      </div>
+
+      <div class="nav-section" style="margin-top:12px;">Actions</div>
+      <div class="nav-item" data-page="approve" onclick="showPage('approve')">
+        <span class="nav-icon">✅</span> Approve / Reject
+      </div>
+      <div class="nav-item" data-page="settings" onclick="showPage('settings')">
+        <span class="nav-icon">⚙️</span> Settings
+      </div>
+    </nav>
+
+    <div class="status-bar">
+      <div class="status-row">
+        <span class="status-label">Ollama</span>
+        <span id="status-ollama" class="badge badge-muted">checking…</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">GitHub</span>
+        <span id="status-github" class="badge badge-muted">checking…</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Mode</span>
+        <span id="status-mode" class="badge badge-yellow">DRY RUN</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Pending</span>
+        <span id="status-pending" class="badge badge-muted">none</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Review Changes</div>
+      <div class="topbar-actions">
+        <button class="btn" onclick="refreshStatus()">↻ Refresh</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── Review Page ── -->
+      <div class="page active" id="page-review">
+        <div class="card">
+          <div class="card-title">🔍 Code Review Pipeline</div>
+          <div class="pipeline-viz">
+            <div class="agent-node">
+              <div class="agent-dot" id="dot-Reviewer">🔍</div>
+              <div class="agent-label">Reviewer</div>
+            </div>
+            <div class="agent-connector" id="conn-1"></div>
+            <div class="agent-node">
+              <div class="agent-dot" id="dot-Planner">🗺️</div>
+              <div class="agent-label">Planner</div>
+            </div>
+            <div class="agent-connector" id="conn-2"></div>
+            <div class="agent-node">
+              <div class="agent-dot" id="dot-Writer">✍️</div>
+              <div class="agent-label">Writer</div>
+            </div>
+            <div class="agent-connector" id="conn-3"></div>
+            <div class="agent-node">
+              <div class="agent-dot" id="dot-Gatekeeper">🔒</div>
+              <div class="agent-label">Gatekeeper</div>
+            </div>
+          </div>
+
+          <div class="card-grid">
+            <div class="form-group">
+              <label>Base Branch</label>
+              <input id="review-base" value="main" placeholder="main">
+            </div>
+            <div class="form-group">
+              <label>Commit Range (optional)</label>
+              <input id="review-range" placeholder="e.g. HEAD~3..HEAD">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="runReview()" id="btn-review">
+              ▶ Run Review
+            </button>
+          </div>
+        </div>
+
+        <div id="review-log-container" style="display:none;">
+          <div class="card-title" style="margin-bottom:8px;">Pipeline Log</div>
+          <div class="pipeline-log" id="review-log"></div>
+        </div>
+
+        <div id="review-result" style="display:none;"></div>
+      </div>
+
+      <!-- ── Draft Page ── -->
+      <div class="page" id="page-draft">
+        <div class="card">
+          <div class="card-title">✏️ Draft Issue or Pull Request</div>
+          <div class="card-grid">
+            <div class="form-group">
+              <label>Type</label>
+              <select id="draft-kind">
+                <option value="issue">GitHub Issue</option>
+                <option value="pr">Pull Request</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Base Branch</label>
+              <input id="draft-base" value="main">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Instruction (optional)</label>
+            <textarea id="draft-instruction"
+              placeholder="e.g. Create an issue for missing input validation in login API"></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="runDraft()" id="btn-draft">
+              ✏️ Generate Draft
+            </button>
+          </div>
+        </div>
+
+        <div id="draft-log-container" style="display:none;">
+          <div class="card-title" style="margin-bottom:8px;">Pipeline Log</div>
+          <div class="pipeline-log" id="draft-log"></div>
+        </div>
+
+        <div id="draft-result" style="display:none;"></div>
+      </div>
+
+      <!-- ── Improve Page ── -->
+      <div class="page" id="page-improve">
+        <div class="card">
+          <div class="card-title">⚡ Improve Existing Issue / PR</div>
+          <div class="card-grid">
+            <div class="form-group">
+              <label>Type</label>
+              <select id="improve-kind">
+                <option value="issue">Issue</option>
+                <option value="pr">Pull Request</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Number</label>
+              <input id="improve-number" type="number" placeholder="42">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="runImprove()" id="btn-improve">
+              ⚡ Analyze & Improve
+            </button>
+          </div>
+        </div>
+
+        <div id="improve-log-container" style="display:none;">
+          <div class="card-title" style="margin-bottom:8px;">Pipeline Log</div>
+          <div class="pipeline-log" id="improve-log"></div>
+        </div>
+
+        <div id="improve-result" style="display:none;"></div>
+      </div>
+
+      <!-- ── Approve Page ── -->
+      <div class="page" id="page-approve">
+        <div id="approve-content">
+          <div class="empty">
+            <div class="empty-icon">🔒</div>
+            <div class="empty-title">No Pending Draft</div>
+            <div>Run Draft Issue/PR or Improve first.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Settings Page ── -->
+      <div class="page" id="page-settings">
+        <div class="card">
+          <div class="card-title">⚙️ Configuration</div>
+          <div class="card-grid">
+            <div class="form-group">
+              <label>Repo Path</label>
+              <input id="cfg-repo" placeholder="/path/to/your/repo">
+            </div>
+            <div class="form-group">
+              <label>Ollama Model</label>
+              <input id="cfg-model" placeholder="llama3.2:3b">
+            </div>
+            <div class="form-group">
+              <label>GitHub Owner</label>
+              <input id="cfg-owner" placeholder="your-username">
+            </div>
+            <div class="form-group">
+              <label>GitHub Repo</label>
+              <input id="cfg-ghrepo" placeholder="repo-name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>GitHub Token (PAT)</label>
+            <input id="cfg-token" type="password" placeholder="ghp_xxxxxxxxxxxxx">
+          </div>
+          <div class="form-group">
+            <label>Mode</label>
+            <select id="cfg-dryrun">
+              <option value="true">Dry Run (safe — no GitHub writes)</option>
+              <option value="false">Live (writes to GitHub)</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+          </div>
+          <div id="settings-msg" style="margin-top:10px; font-size:11px; color:var(--green);"></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let currentPage = 'review';
+let sseSource   = null;
+let activeLogs  = null;   // which log div is currently receiving events
+let agentStates = {};     // agent name → 'idle' | 'active' | 'done'
+const AGENT_ORDER = ['Reviewer', 'Planner', 'Writer', 'Gatekeeper'];
+
+// ── SSE ────────────────────────────────────────────────────────────────────
+function startSSE() {
+  if (sseSource) sseSource.close();
+  sseSource = new EventSource('/api/stream');
+  sseSource.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    if (data.agent === 'heartbeat') return;
+    appendLog(data.agent, data.message);
+    updateAgentDot(data.agent);
+  };
+  sseSource.onerror = () => {};
+}
+
+// ── Log helpers ────────────────────────────────────────────────────────────
+function appendLog(agent, message) {
+  if (!activeLogs) return;
+  const el    = document.getElementById(activeLogs);
+  if (!el) return;
+  const isTool = message.startsWith('[tool]');
+  const entry  = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `
+    <span class="log-agent log-agent-${agent}">${agent}</span>
+    <span class="${isTool ? 'log-tool' : 'log-msg'}">${escHtml(message)}</span>`;
+  el.appendChild(entry);
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearLog(logId) {
+  const el = document.getElementById(logId);
+  if (el) el.innerHTML = '';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Agent dot animation ────────────────────────────────────────────────────
+function resetDots() {
+  AGENT_ORDER.forEach(a => {
+    const dot = document.getElementById(`dot-${a}`);
+    if (dot) { dot.className = 'agent-dot'; }
+  });
+  [1,2,3].forEach(i => {
+    const c = document.getElementById(`conn-${i}`);
+    if (c) c.classList.remove('active');
+  });
+  agentStates = {};
+}
+
+function updateAgentDot(agent) {
+  if (!AGENT_ORDER.includes(agent)) return;
+  const dot = document.getElementById(`dot-${agent}`);
+  if (!dot) return;
+
+  // Mark previous as done
+  const idx = AGENT_ORDER.indexOf(agent);
+  if (idx > 0) {
+    const prev = AGENT_ORDER[idx - 1];
+    const prevDot = document.getElementById(`dot-${prev}`);
+    if (prevDot && !prevDot.classList.contains('fail')) {
+      prevDot.className = 'agent-dot done';
+      const conn = document.getElementById(`conn-${idx}`);
+      if (conn) conn.classList.add('active');
+    }
+  }
+  dot.className = 'agent-dot active';
+}
+
+function markAgentDone(agent, success = true) {
+  const dot = document.getElementById(`dot-${agent}`);
+  if (dot) dot.className = success ? 'agent-dot done' : 'agent-dot fail';
+  // Activate last connector
+  const idx = AGENT_ORDER.indexOf(agent);
+  if (idx >= 0 && idx < 3) {
+    const conn = document.getElementById(`conn-${idx + 1}`);
+    if (conn && success) conn.classList.add('active');
+  }
+}
+
+// ── Navigation ─────────────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  document.querySelector(`[data-page="${name}"]`).classList.add('active');
+  const titles = {
+    review: 'Review Changes', draft: 'Draft Issue / PR',
+    improve: 'Improve Existing', approve: 'Approve / Reject',
+    settings: 'Settings',
+  };
+  document.getElementById('topbar-title').textContent = titles[name] || name;
+  currentPage = name;
+  if (name === 'approve') loadPendingDraft();
+  if (name === 'settings') loadSettings();
+}
+
+// ── Status ─────────────────────────────────────────────────────────────────
+async function refreshStatus() {
+  const r = await fetch('/api/status').then(r => r.json()).catch(() => ({}));
+  const ollamaEl = document.getElementById('status-ollama');
+  ollamaEl.textContent  = r.ollama || '?';
+  ollamaEl.className    = `badge ${r.ollama === 'running' ? 'badge-green' : 'badge-red'}`;
+
+  const ghEl = document.getElementById('status-github');
+  ghEl.textContent  = r.github || '?';
+  ghEl.className    = `badge ${r.github === 'configured' ? 'badge-green' : 'badge-yellow'}`;
+
+  const modeEl = document.getElementById('status-mode');
+  modeEl.textContent = r.dry_run ? 'DRY RUN' : 'LIVE';
+  modeEl.className   = `badge ${r.dry_run ? 'badge-yellow' : 'badge-green'}`;
+
+  const pendingEl = document.getElementById('status-pending');
+  pendingEl.textContent = r.has_pending ? (r.pending_task || 'pending') : 'none';
+  pendingEl.className   = `badge ${r.has_pending ? 'badge-blue' : 'badge-muted'}`;
+}
+
+// ── Review ─────────────────────────────────────────────────────────────────
+async function runReview() {
+  const btn = document.getElementById('btn-review');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Running…';
+  clearLog('review-log');
+  document.getElementById('review-log-container').style.display = 'block';
+  document.getElementById('review-result').style.display = 'none';
+  resetDots();
+  activeLogs = 'review-log';
+
+  const body = {
+    base:         document.getElementById('review-base').value || 'main',
+    commit_range: document.getElementById('review-range').value || '',
+  };
+
+  try {
+    const r = await fetch('/api/review', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    }).then(r => r.json());
+
+    AGENT_ORDER.forEach(a => markAgentDone(a, true));
+    renderReviewResult(r);
+    refreshStatus();
+  } catch(e) {
+    appendLog('Orchestrator', `Error: ${e.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '▶ Run Review';
+    activeLogs = null;
+  }
+}
+
+function renderReviewResult(r) {
+  const el = document.getElementById('review-result');
+  el.style.display = 'block';
+  if (r.error) {
+    el.innerHTML = `<div class="verdict-fail">Error: ${escHtml(r.error)}</div>`;
+    return;
+  }
+  const rev = r.review || {};
+  const plan = r.plan || {};
+  const riskClass = `risk-${rev.risk || 'medium'}`;
+  const issues = (rev.issues_found || []).map(i => `<li>${escHtml(i)}</li>`).join('');
+  const hints  = (plan.draft_hints || []).map(h => `<li>${escHtml(h)}</li>`).join('');
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-title">📊 Review Result</div>
+      <div class="result-panel">
+        <div class="result-section">
+          <div class="result-label">Summary</div>
+          <div class="result-value">${escHtml(rev.summary || '')}</div>
+        </div>
+        <div class="card-grid">
+          <div class="result-section">
+            <div class="result-label">Category</div>
+            <div class="result-value">${escHtml(rev.category || '')}</div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Risk</div>
+            <div class="result-value ${riskClass}">${escHtml(rev.risk || '')}</div>
+          </div>
+        </div>
+        ${issues ? `<div class="result-section">
+          <div class="result-label">Issues Found</div>
+          <ul class="issue-list">${issues}</ul>
+        </div>` : ''}
+        <div class="result-section">
+          <div class="result-label">Recommended Action</div>
+          <div class="result-value"><span class="badge badge-blue">${escHtml(rev.recommended_action || '')}</span></div>
+        </div>
+        <div class="result-section">
+          <div class="result-label">Justification</div>
+          <div class="result-value">${escHtml(rev.justification || '')}</div>
+        </div>
+      </div>
+      ${plan.action ? `
+      <div style="margin-top:16px;">
+        <div class="card-title">🗺️ Planner Decision</div>
+        <div class="result-panel">
+          <div class="result-section">
+            <div class="result-label">Action</div>
+            <div class="result-value"><span class="badge badge-purple">${escHtml(plan.action)}</span></div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Scope</div>
+            <div class="result-value">${escHtml(plan.scope || '')}</div>
+          </div>
+          ${hints ? `<div class="result-section">
+            <div class="result-label">Draft Hints for Writer</div>
+            <ul class="suggest-list">${hints}</ul>
+          </div>` : ''}
+        </div>
+      </div>` : ''}
+    </div>`;
+}
+
+// ── Draft ──────────────────────────────────────────────────────────────────
+async function runDraft() {
+  const btn = document.getElementById('btn-draft');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Drafting…';
+  clearLog('draft-log');
+  document.getElementById('draft-log-container').style.display = 'block';
+  document.getElementById('draft-result').style.display = 'none';
+  resetDots();
+  activeLogs = 'draft-log';
+
+  const body = {
+    kind:        document.getElementById('draft-kind').value,
+    instruction: document.getElementById('draft-instruction').value,
+    base:        document.getElementById('draft-base').value || 'main',
+  };
+
+  try {
+    const r = await fetch('/api/draft', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    }).then(r => r.json());
+
+    AGENT_ORDER.forEach(a => markAgentDone(a, r.reflection?.verdict !== 'FAIL'));
+    renderDraftResult(r);
+    refreshStatus();
+  } catch(e) {
+    appendLog('Orchestrator', `Error: ${e.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✏️ Generate Draft';
+    activeLogs = null;
+  }
+}
+
+function renderDraftResult(r) {
+  const el = document.getElementById('draft-result');
+  el.style.display = 'block';
+  if (r.error) {
+    el.innerHTML = `<div class="verdict-fail">Error: ${escHtml(r.error)}</div>`;
+    return;
+  }
+
+  let draftHtml = '';
+  if (r.draft_issue) {
+    const d = r.draft_issue;
+    const evidence = (d.evidence||[]).map(e=>`<li>${escHtml(e)}</li>`).join('');
+    const criteria = (d.acceptance_criteria||[]).map(c=>`<li>${escHtml(c)}</li>`).join('');
+    const labels   = (d.labels||[]).map(l=>`<span class="tag">${escHtml(l)}</span>`).join('');
+    draftHtml = `
+      <div class="card">
+        <div class="card-title">📋 Issue Draft</div>
+        <div class="result-panel">
+          <div class="result-section">
+            <div class="result-label">Title</div>
+            <div class="result-value" style="font-weight:700;font-size:14px;">${escHtml(d.title)}</div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Problem Description</div>
+            <div class="result-value">${escHtml(d.problem_description)}</div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Evidence</div>
+            <ul class="evidence-list">${evidence}</ul>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Acceptance Criteria</div>
+            <ul class="checklist">${criteria}</ul>
+          </div>
+          <div class="card-grid">
+            <div class="result-section">
+              <div class="result-label">Risk Level</div>
+              <div class="result-value risk-${d.risk_level}">${escHtml(d.risk_level)}</div>
+            </div>
+            <div class="result-section">
+              <div class="result-label">Labels</div>
+              <div class="tag-list">${labels}</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  } else if (r.draft_pr) {
+    const d = r.draft_pr;
+    const files  = (d.files_affected||[]).map(f=>`<li><code>${escHtml(f)}</code></li>`).join('');
+    const labels = (d.labels||[]).map(l=>`<span class="tag">${escHtml(l)}</span>`).join('');
+    draftHtml = `
+      <div class="card">
+        <div class="card-title">🔀 PR Draft</div>
+        <div class="result-panel">
+          <div class="result-section">
+            <div class="result-label">Title</div>
+            <div class="result-value" style="font-weight:700;font-size:14px;">${escHtml(d.title)}</div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Summary</div>
+            <div class="result-value">${escHtml(d.summary)}</div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Files Affected</div>
+            <ul class="evidence-list">${files}</ul>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Behavior Change</div>
+            <div class="result-value">${escHtml(d.behavior_change)}</div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Test Plan</div>
+            <div class="result-value">${escHtml(d.test_plan)}</div>
+          </div>
+          <div class="card-grid">
+            <div class="result-section">
+              <div class="result-label">Risk</div>
+              <div class="result-value risk-${d.risk_level}">${escHtml(d.risk_level)}</div>
+            </div>
+            <div class="result-section">
+              <div class="result-label">Base Branch</div>
+              <div class="result-value"><code>${escHtml(d.base_branch)}</code></div>
+            </div>
+          </div>
+          <div class="result-section">
+            <div class="result-label">Labels</div>
+            <div class="tag-list">${labels}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  const refHtml = renderReflection(r.reflection);
+
+  const approvalHtml = r.reflection?.safe_to_proceed ? `
+    <div class="approval-box">
+      <div class="approval-title">🔒 Human Approval Required</div>
+      <div class="approval-sub">Review the draft above carefully before approving.</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-success" onclick="approveFromDraft(true)">✅ Approve & Create</button>
+        <button class="btn btn-danger"  onclick="approveFromDraft(false)">✗ Reject</button>
+      </div>
+    </div>` : `
+    <div class="verdict-fail" style="margin-top:12px;">
+      ✗ Reflection FAIL — revision required before approval.
+    </div>`;
+
+  el.innerHTML = draftHtml + refHtml + approvalHtml;
+}
+
+function renderReflection(ref) {
+  if (!ref) return '';
+  const isPass  = ref.verdict === 'PASS';
+  const cls     = isPass ? 'verdict-pass' : 'verdict-fail';
+  const icon    = isPass ? '✓' : '✗';
+  const issues  = (ref.issues||[]).map(i=>`<li>${escHtml(i)}</li>`).join('');
+  const suggest = (ref.suggestions||[]).map(s=>`<li>${escHtml(s)}</li>`).join('');
+  return `
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">🔍 Gatekeeper Reflection</div>
+      <div class="${cls}">${icon} ${ref.verdict}</div>
+      ${issues  ? `<ul class="issue-list" style="margin-top:10px;">${issues}</ul>` : ''}
+      ${suggest ? `<ul class="suggest-list" style="margin-top:8px;">${suggest}</ul>` : ''}
+    </div>`;
+}
+
+async function approveFromDraft(approved) {
+  const r = await fetch('/api/approve', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ approved }),
+  }).then(r => r.json());
+
+  if (approved && r.github_url) {
+    alert(`✅ Created!\n${r.github_url}`);
+  } else if (approved && !r.github_url) {
+    alert('✅ DRY RUN — no GitHub write. Enable LIVE mode in Settings to create.');
+  } else {
+    alert('✗ Draft rejected. Nothing was created.');
+  }
+  refreshStatus();
+}
+
+// ── Improve ────────────────────────────────────────────────────────────────
+async function runImprove() {
+  const btn = document.getElementById('btn-improve');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Analyzing…';
+  clearLog('improve-log');
+  document.getElementById('improve-log-container').style.display = 'block';
+  document.getElementById('improve-result').style.display = 'none';
+  activeLogs = 'improve-log';
+
+  const body = {
+    kind:   document.getElementById('improve-kind').value,
+    number: parseInt(document.getElementById('improve-number').value),
+  };
+
+  try {
+    const r = await fetch('/api/improve', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    }).then(r => r.json());
+
+    renderImproveResult(r);
+    refreshStatus();
+  } catch(e) {
+    appendLog('Orchestrator', `Error: ${e.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '⚡ Analyze & Improve';
+    activeLogs = null;
+  }
+}
+
+function renderImproveResult(r) {
+  const el = document.getElementById('improve-result');
+  el.style.display = 'block';
+  if (r.error) {
+    el.innerHTML = `<div class="verdict-fail">Error: ${escHtml(r.error)}</div>`;
+    return;
+  }
+  const imp = r.improvement;
+  if (!imp) { el.innerHTML = '<div class="verdict-fail">No improvement data.</div>'; return; }
+
+  const critique  = (imp.critique||[]).map(c=>`<li>${escHtml(c)}</li>`).join('');
+  const changes   = (imp.changes_made||[]).map(c=>`<li>${escHtml(c)}</li>`).join('');
+  const refHtml   = renderReflection(r.reflection);
+
+  const approvalHtml = r.reflection?.safe_to_proceed ? `
+    <div class="approval-box">
+      <div class="approval-title">🔒 Apply Improvement?</div>
+      <div class="approval-sub">This will update the ${imp.kind} on GitHub.</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-success" onclick="approveFromDraft(true)">✅ Apply</button>
+        <button class="btn btn-danger"  onclick="approveFromDraft(false)">✗ Discard</button>
+      </div>
+    </div>` : '';
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-title">📋 Critique — ${imp.kind.toUpperCase()} #${imp.original_number}</div>
+      <div class="result-panel">
+        <div class="result-label">Issues Found</div>
+        <ul class="issue-list">${critique}</ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">✨ Improved Version</div>
+      <div class="result-panel">
+        <div class="result-section">
+          <div class="result-label">New Title</div>
+          <div class="result-value" style="font-weight:700;">${escHtml(imp.improved_title)}</div>
+        </div>
+        <div class="result-section">
+          <div class="result-label">Improved Body</div>
+          <div class="result-value" style="white-space:pre-wrap;">${escHtml((imp.improved_body||'').slice(0,1200))}${(imp.improved_body||'').length > 1200 ? '\n...(truncated)' : ''}</div>
+        </div>
+        ${changes ? `<div class="result-section">
+          <div class="result-label">Changes Made</div>
+          <ul class="suggest-list">${changes}</ul>
+        </div>` : ''}
+      </div>
+    </div>
+    ${refHtml}
+    ${approvalHtml}`;
+}
+
+// ── Pending draft page ─────────────────────────────────────────────────────
+async function loadPendingDraft() {
+  const r = await fetch('/api/state').then(r => r.json()).catch(() => ({}));
+  const el = document.getElementById('approve-content');
+  if (!r.task) {
+    el.innerHTML = `<div class="empty">
+      <div class="empty-icon">🔒</div>
+      <div class="empty-title">No Pending Draft</div>
+      <div>Run Draft Issue/PR or Improve first.</div>
+    </div>`;
+    return;
+  }
+
+  const refHtml = r.reflection ? renderReflection(r.reflection) : '';
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-title">Pending: ${escHtml(r.task)}</div>
+      ${r.draft_issue ? `<div class="result-panel"><b>${escHtml(r.draft_issue.title)}</b><br><small>${escHtml(r.draft_issue.problem_description?.slice(0,200)||'')}</small></div>` : ''}
+      ${r.draft_pr    ? `<div class="result-panel"><b>${escHtml(r.draft_pr.title)}</b><br><small>${escHtml(r.draft_pr.summary?.slice(0,200)||'')}</small></div>` : ''}
+      ${r.improvement ? `<div class="result-panel"><b>Improvement for ${r.improvement.kind} #${r.improvement.original_number}</b><br><small>${escHtml(r.improvement.improved_title)}</small></div>` : ''}
+      ${refHtml}
+      <div class="approval-box" style="margin-top:16px;">
+        <div class="approval-title">🔒 Human Approval Required</div>
+        <div class="approval-sub">Approve to create/update on GitHub. Reject to abort.</div>
+        <div class="btn-row" style="justify-content:center;">
+          <button class="btn btn-success" onclick="doApprove(true)">✅ Approve</button>
+          <button class="btn btn-danger"  onclick="doApprove(false)">✗ Reject</button>
+        </div>
+      </div>
+      <div id="approve-result" style="margin-top:12px;"></div>
+    </div>`;
+}
+
+async function doApprove(approved) {
+  const r = await fetch('/api/approve', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ approved }),
+  }).then(r => r.json());
+
+  const el = document.getElementById('approve-result');
+  if (approved) {
+    if (r.github_url && !r.github_url.includes('DRY')) {
+      el.innerHTML = `<div class="verdict-pass">✓ Created: <a href="${r.github_url}" target="_blank" style="color:var(--blue)">${r.github_url}</a></div>`;
+    } else {
+      el.innerHTML = `<div class="verdict-pass">✓ Processed (DRY RUN — enable LIVE mode in Settings)</div>`;
+    }
+  } else {
+    el.innerHTML = `<div class="verdict-fail">✗ Rejected. No changes made.</div>`;
+  }
+  refreshStatus();
+}
+
+// ── Settings ───────────────────────────────────────────────────────────────
+async function loadSettings() {
+  const r = await fetch('/api/config').then(r => r.json()).catch(() => ({}));
+  document.getElementById('cfg-repo').value   = r.repo_path    || '';
+  document.getElementById('cfg-model').value  = r.ollama_model || '';
+  document.getElementById('cfg-owner').value  = r.github_owner || '';
+  document.getElementById('cfg-ghrepo').value = r.github_repo  || '';
+  document.getElementById('cfg-dryrun').value = r.dry_run ? 'true' : 'false';
+}
+
+async function saveSettings() {
+  const body = {
+    repo_path:    document.getElementById('cfg-repo').value,
+    ollama_model: document.getElementById('cfg-model').value,
+    github_owner: document.getElementById('cfg-owner').value,
+    github_repo:  document.getElementById('cfg-ghrepo').value,
+    dry_run:      document.getElementById('cfg-dryrun').value === 'true',
+  };
+  const token = document.getElementById('cfg-token').value;
+  if (token) body.github_token = token;
+
+  await fetch('/api/config', {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  });
+  document.getElementById('settings-msg').textContent = '✓ Settings saved';
+  setTimeout(() => document.getElementById('settings-msg').textContent = '', 3000);
+  refreshStatus();
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+startSSE();
+refreshStatus();
+setInterval(refreshStatus, 15000);
+</script>
+</body>
+</html>
