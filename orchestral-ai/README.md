@@ -55,7 +55,7 @@ Example prompt:
 ```bash
 Explain the changes in Python 3.13
 ```
-
+![Picture2](images/Picture2.png)
 The agent provides structured explanations including language changes, performance improvements, and syntax updates.
 
 # Multi-Turn Conversation Example
