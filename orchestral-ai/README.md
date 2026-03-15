@@ -2,8 +2,6 @@
 
 <div align="center">
 
-### AI-Augmented Software Engineering – Week 6
-
 Agent experiments using **Orchestral AI** to explore tool-based LLM orchestration and multi-turn conversations.
 
 </div>
@@ -23,8 +21,6 @@ The repository includes examples such as:
 - Web interface interaction with LLM agents
 - Exploration of Python feature explanations using agents
 - Demonstrations of how orchestration frameworks coordinate LLM responses
-
-These experiments were conducted as part of the **AI-Augmented Software Engineering course**.
 
 ---
 
