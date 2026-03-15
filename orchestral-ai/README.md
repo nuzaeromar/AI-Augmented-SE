@@ -56,6 +56,7 @@ Example prompt:
 Explain the changes in Python 3.13
 ```
 ![Picture2](images/Picture2.png)
+
 The agent provides structured explanations including language changes, performance improvements, and syntax updates.
 
 # Multi-Turn Conversation Example
@@ -63,6 +64,9 @@ This experiment demonstrates structured dialogue between two agents.
 ```bash
 python3 examples/multi_turn_conversation.py
 ```
+
+![Picture1](images/Picture1.png)
+
 Example Output:
 ```bash
 === Philosophical Debate: Quine vs Carnap ===
