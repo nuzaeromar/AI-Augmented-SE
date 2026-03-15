@@ -36,8 +36,11 @@ pip install orchestral-ai
 Create a .env file in the project directory.
 
 Example:
+
 OPENAI_API_KEY=your_key_here
+
 ANTHROPIC_API_KEY=your_key_here
+
 You only need one provider to run the examples.
 
 # Minimal Agent Example
